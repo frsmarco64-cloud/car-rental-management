@@ -1,0 +1,25 @@
+{
+  "name": "car-rental-management",
+  "version": "1.0.0",
+  "description": "Software completo per la gestione di un noleggio auto",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "car-rental",
+    "booking",
+    "express",
+    "sqlite"
+  ],
+  "author": "frsmarco64-cloud",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.16"
+  }
+}

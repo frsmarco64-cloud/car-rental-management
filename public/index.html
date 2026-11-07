@@ -3,15 +3,13 @@ const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 
 const dataDir = path.join(__dirname, 'data');
-const dbFile = path.join(dataDir, 'car_rental.db');
+const dbFile = path.join(dataDir, 'autorent.db');
 
 fs.mkdirSync(dataDir, { recursive: true });
 
 const db = new sqlite3.Database(dbFile, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
   if (err) {
     console.error('Errore apertura database:', err.message);
-  } else {
-    console.log('Database SQLite pronto.');
   }
 });
 
@@ -109,32 +107,38 @@ async function initDb() {
 
   const vehicleCount = await get('SELECT COUNT(*) AS total FROM vehicles');
   if ((vehicleCount?.total || 0) === 0) {
-    await run(`INSERT INTO vehicles (brand, model, plate, year, transmission, fuel, category, daily_rate, status, notes)
+    await run(`
+      INSERT INTO vehicles (brand, model, plate, year, transmission, fuel, category, daily_rate, status, notes)
       VALUES
-      ('BMW', 'Serie 1', 'AB123CD', 2022, 'manual', 'diesel', 'city', 75, 'available', 'Auto compatta, ottima per viaggi urbani.'),
-      ('Mercedes', 'Class A', 'EF456GH', 2023, 'automatic', 'petrol', 'premium', 120, 'available', 'Vettura elegante con climatizzazione.'),
-      ('Volkswagen', 'Golf', 'IJ789KL', 2021, 'manual', 'diesel', 'family', 90, 'available', 'Perfetta per viaggi familiari.');`);
+      ('BMW', 'Serie 1', 'AB123CD', 2022, 'manual', 'diesel', 'city', 75, 'available', 'Compact and efficient city car.'),
+      ('Mercedes', 'Class A', 'EF456GH', 2023, 'automatic', 'petrol', 'premium', 120, 'available', 'High-end vehicle for executive renting.'),
+      ('Volkswagen', 'Golf', 'IJ789KL', 2021, 'manual', 'diesel', 'family', 90, 'available', 'Great option for family trips.');
+    `);
   }
 
   const customerCount = await get('SELECT COUNT(*) AS total FROM customers');
   if ((customerCount?.total || 0) === 0) {
-    await run(`INSERT INTO customers (name, surname, email, phone, license_number)
+    await run(`
+      INSERT INTO customers (name, surname, email, phone, license_number)
       VALUES
       ('Mario', 'Rossi', 'mario.rossi@email.com', '3331234567', 'RM12345678'),
       ('Anna', 'Bianchi', 'anna.bianchi@email.com', '3457654321', 'AN98765432'),
-      ('Luca', 'Verdi', 'luca.verdi@email.com', '3479988776', 'LV34567890');`);
+      ('Luca', 'Verdi', 'luca.verdi@email.com', '3479988776', 'LV34567890');
+    `);
   }
 
   const bookingCount = await get('SELECT COUNT(*) AS total FROM bookings');
   if ((bookingCount?.total || 0) === 0) {
-    const vehicle = await get('SELECT id FROM vehicles ORDER BY id LIMIT 1');
-    const customer = await get('SELECT id FROM customers ORDER BY id LIMIT 1');
+    const firstVehicle = await get('SELECT id FROM vehicles ORDER BY id LIMIT 1');
+    const firstCustomer = await get('SELECT id FROM customers ORDER BY id LIMIT 1');
 
-    if (vehicle && customer) {
-      await run(`INSERT INTO bookings (vehicle_id, customer_id, pickup_date, return_date, daily_rate, deposit, total_amount, start_km, end_km, status, notes)
-        VALUES (?, ?, '2026-11-10', '2026-11-15', 75, 150, 525, 12000, 12450, 'completed', 'Prenotazione campione')`, [vehicle.id, customer.id]);
+    if (firstVehicle && firstCustomer) {
+      await run(`
+        INSERT INTO bookings (vehicle_id, customer_id, pickup_date, return_date, daily_rate, deposit, total_amount, start_km, end_km, status, notes)
+        VALUES (?, ?, '2026-11-10', '2026-11-15', 75, 150, 525, 12000, 12450, 'completed', 'Sample reservation for testing');
+      `, [firstVehicle.id, firstCustomer.id]);
     }
   }
 }
 
-module.exports = { db, all, get, run, initDb };
+module.exports = { db, initDb, run, get, all };

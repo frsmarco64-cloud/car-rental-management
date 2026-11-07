@@ -1,7 +1,7 @@
 {
-  "name": "car-rental-management",
-  "version": "1.0.0",
-  "description": "Software completo per la gestione di un noleggio auto",
+  "name": "autorent-pro",
+  "version": "2.0.0",
+  "description": "Software professionale per la gestione di un noleggio auto",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -9,14 +9,18 @@
   },
   "keywords": [
     "car-rental",
-    "booking",
+    "booking management",
+    "fleet management",
     "express",
     "sqlite"
   ],
   "author": "frsmarco64-cloud",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "express": "^4.19.2",
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {

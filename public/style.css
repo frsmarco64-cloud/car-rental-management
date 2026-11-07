@@ -3,196 +3,287 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Car Rental Management</title>
+    <title>AutoRent Pro | Gestione Noleggio Auto</title>
     <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
-    <header class="topbar">
-      <div class="brand">
-        <h1>Car Rental Management</h1>
+    <div id="loginView" class="auth-shell">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="brand-mark">A</div>
+          <div>
+            <p class="eyebrow">AutoRent Pro</p>
+            <h1>Accesso amministrazione</h1>
+          </div>
+        </div>
+
+        <form id="loginForm" class="auth-form">
+          <label>
+            <span>Username</span>
+            <input type="text" name="username" value="admin" required />
+          </label>
+
+          <label>
+            <span>Password</span>
+            <input type="password" name="password" value="admin123" required />
+          </label>
+
+          <button type="submit" class="btn btn-primary btn-block">Accedi</button>
+          <div id="loginError" class="form-message error"></div>
+        </form>
       </div>
-      <div class="actions">
-        <button class="btn btn-primary" id="refreshBtn">Aggiorna dati</button>
-      </div>
-    </header>
+    </div>
 
-    <main class="container">
-      <section class="summary-grid" id="summaryGrid"></section>
+    <div id="appView" class="app-shell hidden">
+      <aside class="sidebar">
+        <div class="brand-box">
+          <div class="brand-mark large">A</div>
+          <div>
+            <p class="eyebrow">Fleet OS</p>
+            <h2>AutoRent Pro</h2>
+          </div>
+        </div>
 
-      <section class="panel">
-        <div class="panel-header">
-          <h2>Veicoli</h2>
-        </div>
-        <form id="vehicleForm" class="form-grid">
-          <div>
-            <label>Marca</label>
-            <input type="text" name="brand" required />
-          </div>
-          <div>
-            <label>Modello</label>
-            <input type="text" name="model" required />
-          </div>
-          <div>
-            <label>Targa</label>
-            <input type="text" name="plate" required />
-          </div>
-          <div>
-            <label>Anno</label>
-            <input type="number" name="year" min="2000" max="2035" value="2024" />
-          </div>
-          <div>
-            <label>Trasmissione</label>
-            <select name="transmission">
-              <option value="manual">Manuale</option>
-              <option value="automatic">Automatica</option>
-            </select>
-          </div>
-          <div>
-            <label>Carburante</label>
-            <select name="fuel">
-              <option value="diesel">Diesel</option>
-              <option value="petrol">Benzina</option>
-              <option value="hybrid">Ibrido</option>
-              <option value="electric">Elettrico</option>
-            </select>
-          </div>
-          <div>
-            <label>Categoria</label>
-            <select name="category">
-              <option value="city">City</option>
-              <option value="family">Family</option>
-              <option value="premium">Premium</option>
-              <option value="suv">SUV</option>
-            </select>
-          </div>
-          <div>
-            <label>Tariffa giornaliera €</label>
-            <input type="number" name="daily_rate" step="0.01" min="1" required />
-          </div>
-          <div class="full-width">
-            <label>Note</label>
-            <textarea name="notes" rows="3"></textarea>
-          </div>
-          <div class="full-width">
-            <button type="submit" class="btn btn-primary">Aggiungi veicolo</button>
-          </div>
-        </form>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Marca</th>
-                <th>Modello</th>
-                <th>Targa</th>
-                <th>Tariffa</th>
-                <th>Stato</th>
-              </tr>
-            </thead>
-            <tbody id="vehiclesTable"></tbody>
-          </table>
-        </div>
-      </section>
+        <nav class="nav-menu">
+          <button class="nav-link active" data-section="dashboard">Dashboard</button>
+          <button class="nav-link" data-section="vehicles">Veicoli</button>
+          <button class="nav-link" data-section="customers">Clienti</button>
+          <button class="nav-link" data-section="bookings">Prenotazioni</button>
+        </nav>
 
-      <section class="panel">
-        <div class="panel-header">
-          <h2>Clienti</h2>
+        <div class="sidebar-footer">
+          <p>Utente loggato</p>
+          <strong id="loggedUser">admin</strong>
+          <button id="logoutBtn" class="btn btn-secondary btn-block">Logout</button>
         </div>
-        <form id="customerForm" class="form-grid">
-          <div>
-            <label>Nome</label>
-            <input type="text" name="name" required />
-          </div>
-          <div>
-            <label>Cognome</label>
-            <input type="text" name="surname" required />
-          </div>
-          <div>
-            <label>Email</label>
-            <input type="email" name="email" />
-          </div>
-          <div>
-            <label>Telefono</label>
-            <input type="text" name="phone" />
-          </div>
-          <div class="full-width">
-            <label>Patente</label>
-            <input type="text" name="license_number" />
-          </div>
-          <div class="full-width">
-            <button type="submit" class="btn btn-primary">Aggiungi cliente</button>
-          </div>
-        </form>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Cognome</th>
-                <th>Email</th>
-                <th>Telefono</th>
-              </tr>
-            </thead>
-            <tbody id="customersTable"></tbody>
-          </table>
-        </div>
-      </section>
+      </aside>
 
-      <section class="panel">
-        <div class="panel-header">
-          <h2>Prenotazioni</h2>
-        </div>
-        <form id="bookingForm" class="form-grid">
+      <main class="main-panel">
+        <header class="topbar">
           <div>
-            <label>Cliente</label>
-            <select name="customer_id" id="customerSelect" required></select>
+            <p class="eyebrow">Panoramica operativa</p>
+            <h1>Gestione noleggio auto</h1>
           </div>
-          <div>
-            <label>Veicolo</label>
-            <select name="vehicle_id" id="vehicleSelect" required></select>
-          </div>
-          <div>
-            <label>Ritiro</label>
-            <input type="date" name="pickup_date" required />
-          </div>
-          <div>
-            <label>Restituzione</label>
-            <input type="date" name="return_date" required />
-          </div>
-          <div>
-            <label>Tariffa giornaliera</label>
-            <input type="number" name="daily_rate" step="0.01" min="1" />
-          </div>
-          <div>
-            <label>Deposito</label>
-            <input type="number" name="deposit" step="0.01" min="0" value="0" />
-          </div>
-          <div class="full-width">
-            <label>Note</label>
-            <textarea name="notes" rows="3"></textarea>
-          </div>
-          <div class="full-width">
-            <button type="submit" class="btn btn-primary">Crea prenotazione</button>
-          </div>
-        </form>
+          <button id="refreshBtn" class="btn btn-primary">Aggiorna</button>
+        </header>
 
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Cliente</th>
-                <th>Veicolo</th>
-                <th>Ritiro</th>
-                <th>Restituzione</th>
-                <th>Totale</th>
-                <th>Stato</th>
-                <th>Azioni</th>
-              </tr>
-            </thead>
-            <tbody id="bookingsTable"></tbody>
-          </table>
-        </div>
-      </section>
-    </main>
+        <section id="dashboard" class="content-section active">
+          <div id="summaryGrid" class="summary-grid"></div>
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Andamento mensile</h3>
+            </div>
+            <div class="chart-table-wrap">
+              <table class="mini-table">
+                <thead>
+                  <tr>
+                    <th>Mese</th>
+                    <th>Prenotazioni</th>
+                    <th>Entrate</th>
+                  </tr>
+                </thead>
+                <tbody id="monthlyTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="vehicles" class="content-section">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Nuovo veicolo</h3>
+            </div>
+            <form id="vehicleForm" class="form-grid">
+              <label>
+                <span>Marca</span>
+                <input type="text" name="brand" required />
+              </label>
+              <label>
+                <span>Modello</span>
+                <input type="text" name="model" required />
+              </label>
+              <label>
+                <span>Targa</span>
+                <input type="text" name="plate" required />
+              </label>
+              <label>
+                <span>Anno</span>
+                <input type="number" name="year" min="2000" max="2035" value="2024" required />
+              </label>
+              <label>
+                <span>Trasmissione</span>
+                <select name="transmission">
+                  <option value="manual">Manuale</option>
+                  <option value="automatic">Automatica</option>
+                </select>
+              </label>
+              <label>
+                <span>Carburante</span>
+                <select name="fuel">
+                  <option value="diesel">Diesel</option>
+                  <option value="petrol">Benzina</option>
+                  <option value="hybrid">Ibrido</option>
+                  <option value="electric">Elettrico</option>
+                </select>
+              </label>
+              <label>
+                <span>Categoria</span>
+                <select name="category">
+                  <option value="city">City</option>
+                  <option value="family">Family</option>
+                  <option value="premium">Premium</option>
+                  <option value="suv">SUV</option>
+                </select>
+              </label>
+              <label>
+                <span>Tariffa giornaliera (€)</span>
+                <input type="number" name="daily_rate" min="1" step="0.01" required />
+              </label>
+              <label class="full-width">
+                <span>Note</span>
+                <textarea name="notes" rows="3"></textarea>
+              </label>
+              <div class="full-width">
+                <button type="submit" class="btn btn-primary">Salva veicolo</button>
+              </div>
+            </form>
+          </div>
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Flotta</h3>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Marca</th>
+                    <th>Modello</th>
+                    <th>Targa</th>
+                    <th>Tariffa</th>
+                    <th>Stato</th>
+                  </tr>
+                </thead>
+                <tbody id="vehiclesTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="customers" class="content-section">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Nuovo cliente</h3>
+            </div>
+            <form id="customerForm" class="form-grid">
+              <label>
+                <span>Nome</span>
+                <input type="text" name="name" required />
+              </label>
+              <label>
+                <span>Cognome</span>
+                <input type="text" name="surname" required />
+              </label>
+              <label>
+                <span>Email</span>
+                <input type="email" name="email" />
+              </label>
+              <label>
+                <span>Telefono</span>
+                <input type="text" name="phone" />
+              </label>
+              <label class="full-width">
+                <span>Patente</span>
+                <input type="text" name="license_number" />
+              </label>
+              <div class="full-width">
+                <button type="submit" class="btn btn-primary">Salva cliente</button>
+              </div>
+            </form>
+          </div>
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Anagrafica clienti</h3>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Cognome</th>
+                    <th>Email</th>
+                    <th>Telefono</th>
+                    <th>Patente</th>
+                  </tr>
+                </thead>
+                <tbody id="customersTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="bookings" class="content-section">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Nuova prenotazione</h3>
+            </div>
+            <form id="bookingForm" class="form-grid">
+              <label>
+                <span>Cliente</span>
+                <select name="customer_id" id="customerSelect" required></select>
+              </label>
+              <label>
+                <span>Veicolo</span>
+                <select name="vehicle_id" id="vehicleSelect" required></select>
+              </label>
+              <label>
+                <span>Data ritiro</span>
+                <input type="date" name="pickup_date" required />
+              </label>
+              <label>
+                <span>Data restituzione</span>
+                <input type="date" name="return_date" required />
+              </label>
+              <label>
+                <span>Tariffa giornaliera (€)</span>
+                <input type="number" name="daily_rate" min="1" step="0.01" />
+              </label>
+              <label>
+                <span>Deposito (€)</span>
+                <input type="number" name="deposit" min="0" step="0.01" value="0" />
+              </label>
+              <label class="full-width">
+                <span>Note</span>
+                <textarea name="notes" rows="3"></textarea>
+              </label>
+              <div class="full-width">
+                <button type="submit" class="btn btn-primary">Salva prenotazione</button>
+              </div>
+            </form>
+          </div>
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Prenotazioni</h3>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Cliente</th>
+                    <th>Veicolo</th>
+                    <th>Ritiro</th>
+                    <th>Restituzione</th>
+                    <th>Totale</th>
+                    <th>Stato</th>
+                    <th>Azioni</th>
+                  </tr>
+                </thead>
+                <tbody id="bookingsTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
 
     <script src="/app.js"></script>
   </body>
